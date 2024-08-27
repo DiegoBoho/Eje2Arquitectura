@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, render_template
-from .controlador import crear_usuario, obtener_usuarios, obtener_usuario_por_id, actualizar_usuario, eliminar_usuario
+from .controlador import crear_usuario, obtener_usuarios, obtener_usuario_por_id, actualizar_usuario, eliminar_usuario,obtener_clientes,obtener_cliente_por_id,crear_cliente,actualizar_cliente,eliminar_cliente
 
 main_blueprint = Blueprint('main', __name__)
 
@@ -38,3 +38,35 @@ def borrar_usuario(id):
         eliminar_usuario(id)
         return jsonify({'mensaje': 'Usuario eliminado exitosamente'})
     return jsonify({'mensaje': 'Error, usuario no encontrado'})
+
+@main_blueprint.route('/clientes', methods=['GET'])
+def listar_clientes():
+    clientes = obtener_clientes()
+    return jsonify([{'id': c.identificacion, 'nombre': c.Nombre_cliente, 'apellido': c.Apellido_cliente, 'correo_electronico': c.Correo_Electronico, 'direccion': c.Direccion, 'telefono': c.Telefono} for c in clientes])
+
+@main_blueprint.route('/clientes/<int:id>', methods=['GET'])
+def ver_cliente(id):
+    c = obtener_cliente_por_id(id)
+    if c:
+        return jsonify({'id': c.identificacion, 'nombre': c.Nombre_cliente, 'apellido': c.Apellido_cliente, 'correo_electronico': c.Correo_Electronico, 'direccion': c.Direccion, 'telefono': c.Telefono})
+    return jsonify({'error': 'Cliente no encontrado'}), 404
+
+@main_blueprint.route('/clientes', methods=['POST'])
+def agregar_cliente():
+    data = request.json
+    crear_cliente(data['identificacion'], data['Nombre_cliente'], data['Apellido_cliente'], data['Correo_Electronico'], data['Direccion'], data['Telefono'])
+    return jsonify({'mensaje': 'Cliente creado exitosamente'}), 201
+
+@main_blueprint.route('/clientes/<int:id>', methods=['PUT'])
+def editar_cliente(id):
+    data = request.json
+    actualizar_cliente(id, data['Nombre_cliente'], data['Apellido_cliente'], data['Correo_Electronico'], data['Direccion'], data['Telefono'])
+    return jsonify({'mensaje': 'Cliente actualizado exitosamente'})
+
+@main_blueprint.route('/clientes/<int:id>', methods=['DELETE'])
+def borrar_cliente(id):
+    cliente = obtener_cliente_por_id(id)
+    if cliente:
+        eliminar_cliente(id)
+        return jsonify({'mensaje': 'Cliente eliminado exitosamente'})
+    return jsonify({'mensaje': 'Error, cliente no encontrado'})
