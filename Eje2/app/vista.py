@@ -70,3 +70,4 @@ def borrar_cliente(id):
         eliminar_cliente(id)
         return jsonify({'mensaje': 'Cliente eliminado exitosamente'})
     return jsonify({'mensaje': 'Error, cliente no encontrado'})
+

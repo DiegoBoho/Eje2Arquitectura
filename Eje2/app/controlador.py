@@ -1,4 +1,4 @@
-from .modelo import Usuario,Cliente
+from .modelo import Usuario,Cliente,Productos,Factura,DetalleFactura
 from . import db
 
 def crear_usuario(identificacion,Nombre_usuario,Apellido_usuario,Cargo,Contraseña,Direccion,Telefono):
@@ -56,3 +56,79 @@ def eliminar_cliente(cliente_id):
     if cliente:
         db.session.delete(cliente)
         db.session.commit()
+
+def listar_productos():
+    productos = Productos.query.all()
+    return productos
+
+def obtener_productos_por_id(producto_id):
+    return Productos.query.get(producto_id)
+
+def crear_productos(id_producto,Nombre_producto,Precio):
+    productos = Productos(id_producto = id_producto,Nombre_producto=Nombre_producto,Precio=Precio)
+    db.session.add(productos)
+    db.session.commit()
+
+def actualizar_productos(producto_id, nombre, precio):
+    productos = Productos.query.get(producto_id)
+    if productos:
+        productos.Nombre_producto = nombre
+        productos.Precio = precio
+        db.session.commit()
+
+def eliminar_productos(producto_id):
+    productos = Productos.query.get(producto_id)
+    if productos:
+        db.session.delete(productos)
+        db.session.commit()
+
+def listar_factura():
+    return Factura.query.all()
+
+def obtener_factura_por_id(factura_id):
+    return Factura.query.get(factura_id)
+
+def crear_factura(id_Factura,Fecha_Generacion,id_Usuario,id_Cliente):
+    facturas = Factura(id_Factura=id_Factura,Fecha_Generacion=Fecha_Generacion,id_Usuario=id_Usuario,id_Cliente=id_Cliente)
+    db.session.add(facturas)
+    db.session.commit()
+
+def actualizar_factura(factura_id, fecha_generacion,id_Usuario,id_Cliente):
+    facturas = Factura.query.get(factura_id)
+    if facturas:
+        facturas.Fecha_Generacion = fecha_generacion
+        facturas.id_Usuario = id_Usuario
+        facturas.id_Cliente = id_Cliente
+        db.session.commit()
+
+def eliminar_factura(factura_id):
+    facturas = Factura.query.get(factura_id)
+    if facturas:
+        db.session.delete(facturas)
+        db.session.commit()
+
+def crear_factura_detalles(id_Detalle_Factura,id_Factura,id_producto,cantidad,precio_total):
+    facturas = DetalleFactura(id_Detalle_Factura=id_Detalle_Factura,id_Factura=id_Factura,id_producto=id_producto,cantidad=cantidad,precio_total=precio_total)
+    db.session.add(facturas)
+    db.session.commit()
+
+def actualizar_factura_detalles(factura_id, id_Factura,id_producto,cantidad,precio_total):
+    facturas = DetalleFactura.query.get(factura_id)
+    if facturas:
+        facturas.id_Factura = id_Factura
+        facturas.id_producto = id_producto
+        facturas.cantidad = cantidad
+        facturas.precio_total = precio_total
+        db.session.commit()
+
+def eliminar_factura_detalles(factura_id):
+    facturas = DetalleFactura.query.get(factura_id)
+    if facturas:
+        db.session.delete(facturas)
+        db.session.commit() 
+
+def listar_detalles_factura():
+    return DetalleFactura.query.all()
+
+def obtener_detalles_factura_por_id(detalles_factura_id):
+    return DetalleFactura.query.get(detalles_factura_id)
