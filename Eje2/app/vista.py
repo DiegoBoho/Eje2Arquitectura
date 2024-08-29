@@ -123,7 +123,7 @@ def crear_facturas():
     return jsonify({'mensaje': 'Factura creado exitosamente'}), 201
 
 @main_blueprint.route('/facturas/<int:id>', methods=['PUT'])
-def actualizar_factura(id):
+def actualizar_facturas(id):
     data = request.json
     actualizar_factura(id, data['Fecha_generacion'], data['id_Usuario'], data['id_Cliente'])
     return jsonify({'mensaje': 'Factura actualizado exitosamente'})
@@ -160,7 +160,7 @@ def editar_factura_detalle(id):
 
 @main_blueprint.route('/facturasdetalles/<int:id>', methods=['DELETE'])
 def borrar_factura_detalles(id):
-    facturas = obtener_productos_por_id(id)
+    facturas = obtener_detalles_factura_por_id(id)
     if facturas:
         eliminar_factura_detalles(id)
         return jsonify({'mensaje': 'Factura Detalle eliminado exitosamente'})
